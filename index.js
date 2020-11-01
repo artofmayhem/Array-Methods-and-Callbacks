@@ -70,13 +70,34 @@ getYears(finals);
 
 /* Task 4: Implement a higher-order function called `getWinners`, that accepts the callback function `getFinals()` and determine the winner (home or away) of each `finals` game. Return the name of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
 
-    /* code here */
 
-};
 
-getWinners();
+function getWinners(data)                                        // function declaration taking in callback as parameter
+{       
+    console.log(data[0].Year)
+    let winners = [];
+    for(let i = 0; i < data.length ; i++)
+    {
+        if(data[i]["Home Team Goals"] > data[i]["Away Team Goals"])
+        {
+            winners.push(data[i]["Home Team Name"]);
+        } 
+         if (data[i]["Home Team Goals"] < data[i]["Away Team Goals"])
+        {
+            winners.push(data[i]["Away Team Name"]);
+        }
+        else if (data[i]["Home Team Goals"] === data[i]["Away Team Goals"])
+        {   
+            winners.push(data[i]["Win conditions"]);
+        };  
+    };
+    return winners;
+}; 
+ getWinners(getFinals(fifaData));                                // function invocation using getFinals callback as argument
+
+
+
 
 /* Task 5: Implement a higher-order function called `getWinnersByYear` that accepts the following parameters and returns a set of strings "In {year}, {country} won the world cup!" 
 
@@ -85,19 +106,57 @@ Parameters:
  * callback function getYears
  */
 
-function getWinnersByYear(/* code here */) {
 
+
+
+ function getWinnersByYear(data, callback1, callback2)                   // function declaration using callback functions as parameters
+  {               
+    let finalsArray = getFinals(data);                                                       
+    let dates = callback1(finalsArray);  
+    //console.log(years);                                               // array of years numbers
+    let winners = callback2(finalsArray);
+    //console.log(winners);                                             // array of winner strings
+   
+                                                                        //.map //SYNTAX:   let newArray = arr.map(callback(currentValue[, index[, array]]) {}
+    let winnerStatement = dates.map((year, i) => 
+    {
+         let winnerName = winners[i];
+         console.log(`In ${year}, ${winnerName} won the world cup!`)
+    })                                                                 // closing arrow function                                     
+
+    return winnerStatement;
 };
+ //TEST CODE   
+ //var output = getWinnersByYear(fifaData, getYears, getWinners);  
+ //console.log(output);
 
-getWinnersByYear();
 
-/* Task 6: Write a function called `getAverageGoals` that accepts a parameter `data` and returns the the average number of home team goals and away team goals scored per match (Hint: use .reduce and do this in 2 steps) */
 
-function getAverageGoals(/* code here */) {
 
-    /* code here */
 
-};
+ /* Task 6: Write a function called `getAverageGoals` that accepts a parameter `data` and returns the the average number of home team goals and away team goals scored per match (Hint: use .reduce and do this in 2 steps) */
+//let cb2 = ( total, currentValue) => {return total + currentValue.land_area;}
+
+
+
+
+function getAverageGoals(data)                       // function declaration accepting data as a parameter
+{   
+     let homeTotal = [];                             // declare variable to catch home team goals .reduce value
+     let awayTotal = [];                             // declare variable to catch away team goals .reduce value     
+   
+     let reducer1 = ((totalAfterEachIteration, item) => {    // .reduce all home team values into a single number using 0 as starting point 
+         return item[1]["Home Team Goals"] + totalAfterEachIteration
+     }, 0);
+     let reducer2 = ((totalAfterEachIteration1, item1) => {  // .reduce all away team values into a single number using 0 as a starting point
+         return item1[1]["Away Team Goals"] + totalAfterEachIteration1
+     }, 0);                                                
+     
+                                                       
+     return homeTotal / 2, awayTotal / 2;                      // calculation of ending (.reduce value / amount of data.length)
+}                                                 
+
+getAverageGoals(fifaData);                              // function invocation using fifaData as an argument
 
 getAverageGoals();
 
