@@ -140,25 +140,42 @@ Parameters:
 
 
 
-function getAverageGoals(data)                       // function declaration accepting data as a parameter
-{   
-     let homeTotal = [];                             // declare variable to catch home team goals .reduce value
-     let awayTotal = [];                             // declare variable to catch away team goals .reduce value     
-   
-     let reducer1 = ((totalAfterEachIteration, item) => {    // .reduce all home team values into a single number using 0 as starting point 
-         return item[1]["Home Team Goals"] + totalAfterEachIteration
-     }, 0);
-     let reducer2 = ((totalAfterEachIteration1, item1) => {  // .reduce all away team values into a single number using 0 as a starting point
-         return item1[1]["Away Team Goals"] + totalAfterEachIteration1
-     }, 0);                                                
-     
-                                                       
-     return homeTotal / 2, awayTotal / 2;                      // calculation of ending (.reduce value / amount of data.length)
-}                                                 
+function getAverageGoals(data) {
+    let aveHome = 0;
+    let aveAway = 0;
+  
+  function getHomeTeamGoals(partial, next) {   // tool to get home team goals
+    let entry = next;
+    let totalGoals = entry["Home Team Goals"];
+    return partial + numGoals;
+  }
+  
+  function getAwayTeamGoals(partial, next) { // tools to get away team goals
+    let entry = next;
+    let totalGoals = entry["Away Team Goals"];
+    return partial + numGoals;
+  }
 
-getAverageGoals(fifaData);                              // function invocation using fifaData as an argument
+// .reduce SYNTAX: array.reduce(function(total, currentValue, currentIndex, arr), initialValue)
+let homeTotal = data.reduce(getHomeTeamGoals, 0); // gives total home goals
+let awayTotal = data.reduce(getAwayTeamGoals, 0); // gives total home goals
 
+aveHome = homeTotal/data.length; // calculate home average
+aveHome = aveHome.toFixed(2);  // fix decimals to 2
+
+aveAway = awayTotal/data.length; // calculate away average
+aveAway = aveAway.toFixed(2);  // fix decimals to 2
+
+return `Average home team goals was ${aveHome} per match.  Average away team goals was ${aveAway} per match.`
 getAverageGoals();
+}; // end of function
+  
+  // TEST CODE
+  var output = getAverageGoals(fifaData);
+  console.log(output);
+
+
+
 
 /// STRETCH 🥅 //
 
